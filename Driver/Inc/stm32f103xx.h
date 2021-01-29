@@ -123,7 +123,7 @@ typedef struct{
 #define GPIOB_PCLK_DI() (RCC -> APB2ENR &= ~(1<<3))
 #define GPIOC_PCLK_DI() (RCC -> APB2ENR &= ~(1<<4))
 #define GPIOD_PCLK_DI() (RCC -> APB2ENR &= ~(1<<5))
-#define AFIO_PCLK_EN()  (RCC -> APB2ENR &= ~(1<<0))
+#define AFIO_PCLK_DI()  (RCC -> APB2ENR &= ~(1<<0))
 
 //******************************************* RESET GPIO REGISTERS******************************************
 
