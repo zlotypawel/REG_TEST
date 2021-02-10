@@ -10,6 +10,8 @@ int main(void) {
 
 	GPIO_PeriClockControl(GPIOA, ENABLE);
 	GPIO_PeriClockControl(GPIOB, ENABLE);
+	AFIO_PCLK_EN();
+
 
 	GpioLed.pGPIOx = GPIOA;
 	GpioLed.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_0;
@@ -17,11 +19,11 @@ int main(void) {
 	GpioLed.GPIO_PinConfig.GPIO_PinSpeed = GPIO_MAX_SPEED_2Mhz;
 
 	GpioSW.pGPIOx = GPIOB;
-	GpioSW.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_7;
-	GpioSW.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_INPUT_PU;
+	GpioSW.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_1;
+	GpioSW.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_FT;
 
 
-
+	GPIO_IRQConfig(IRQ_NO_EXTI1, ENABLE);
 
 	GPIO_Init(&GpioLed);
 	GPIO_Init(&GpioSW);
@@ -32,17 +34,16 @@ int main(void) {
 
 	while (1) {
 
-		if(!(GPIO_ReadFromInputPin(GPIOB, GPIO_PIN_7)  == GPIO_PIN_SET))
+		/*if(!(GPIO_ReadFromInputPin(GPIOB, GPIO_PIN_7)  == GPIO_PIN_SET))
 		{
 			GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_0);
 			delay();
-		}
+		}*/
 
 	}
 }
 
-
-void delay(void) {
-	for (uint32_t i = 0; i < 5000; i++) {
-	}
+void EXTI1_IRQHandler(void){
+	EXTI -> PR |= (1 << 1);
+	GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_0);
 }

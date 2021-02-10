@@ -24,6 +24,8 @@ typedef struct{
 typedef struct{
 	GPIO_RegDef_t *pGPIOx;
 	GPIO_PinConfig_t GPIO_PinConfig;
+	AFIO_RegDef_t *pAFIFO;
+	EXTI_RegDef_t *pEXTICR;
 
 }GPIO_Handle_t;
 
@@ -42,7 +44,7 @@ void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t Val
 void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value);
 void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
 
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t ENoDi);
+void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t ENoDi);
 void GPIO_IRQHandling(uint8_t PinNumber);
 
 
@@ -80,6 +82,11 @@ void GPIO_IRQHandling(uint8_t PinNumber);
 #define	 GPIO_MODE_OUTPUT_OD					6				/* General purpose output Open-drain - RESET STATE */
 #define  GPIO_MODE_AF_OUTPUT_PP                 7  				 /*!< Alternate Function Push Pull Mode       */
 #define  GPIO_MODE_AF_OUTPUT_OD                 8   			/*!< Alternate Function Open Drain Mode       */
+
+// AFIFO INNTERRUPT
+#define GPIO_MODE_IT_FT			9
+#define GPIO_MODE_IT_RT			10
+#define GPIO_MODE_IT_RFT		11
 
 
 /** @ref GPIO_speed_define

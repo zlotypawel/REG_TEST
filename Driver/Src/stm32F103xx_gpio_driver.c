@@ -30,6 +30,7 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnoDi){
 		if(pGPIOx == GPIOD){
 			GPIOD_PCLK_EN();
 		}
+
 	}else{
 		if(pGPIOx == GPIOA){
 			GPIOA_PCLK_DI();
@@ -66,6 +67,29 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 		}else if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_INPUT_PD){
 			pGPIOHandle ->pGPIOx->CRL &= ~ (4<< (4 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
 			pGPIOHandle ->pGPIOx->CRL |=   (8 << (4 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+	//INTERUPT MODE
+		}else if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_FT){
+			pGPIOHandle ->pGPIOx->CRL &= ~ (4<< (4 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+			pGPIOHandle ->pGPIOx->CRL |=   (8 << (4 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+			pGPIOHandle ->pGPIOx->ODR |=   (1 << (pGPIOHandle -> GPIO_PinConfig.GPIO_PinNumber));
+
+			EXTI -> FTSR |= (1<< pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI -> RTSR &= ~(1<< pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber);
+
+			EXTI->IMR |= (1<< pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber);
+
+			uint8_t tmp1 = pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber / 4;
+			uint8_t tmp2 = pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber % 4;
+			uint8_t portcode = GPIO_BASEADDR_TO_CODE(pGPIOHandle ->pGPIOx);
+			AFIO ->EXTICR[tmp1] |= portcode << (tmp2 * 4);
+
+
+
+		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT){
+
+
+
+		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RFT){
 
 
 
@@ -177,6 +201,25 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber){
 	pGPIOx ->ODR ^= (1<<PinNumber);
 }
 
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t ENoDi);
+void GPIO_IRQConfig(uint8_t IRQNumber,  uint8_t ENoDi){
+	if(ENoDi == ENABLE){
+
+		if(IRQNumber <= 31){
+			//ISER0
+			*NVIC_ISER0 |= (1<<IRQNumber);
+
+		}else if(IRQNumber > 31 && IRQNumber < 64){
+			//ISER1
+			*NVIC_ISER1 |= (1<<(IRQNumber % 32));
+
+		}else if(IRQNumber > 64 && IRQNumber < 96){
+			//ISER2
+			*NVIC_ISER2 |= (1<<(IRQNumber % 64));
+
+		}
+	}
+}
+
+
 void GPIO_IRQHandling(uint8_t PinNumber);
 

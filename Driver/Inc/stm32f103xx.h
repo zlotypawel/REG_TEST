@@ -5,6 +5,19 @@
 
 #include <stdio.h>
 
+
+//***************************************CORTEX M3 NVIC ISER REGISTER **********************************
+
+#define NVIC_ISER0			((volatile uint32_t*)0xE000E100)
+#define NVIC_ISER1			((volatile uint32_t*)0xE000E104)
+#define NVIC_ISER2			((volatile uint32_t*)0xE000E108)
+#define NVIC_ISER3			((volatile uint32_t*)0xE000E10C)
+
+
+
+//*******************************************************************************************************
+
+
 									// base addresses of FLASH and SRAM memories
 #define FLASH_BASE_ADDR		0x08000000U
 #define SRAM_BASE_ADDR 		0x20000000U
@@ -87,11 +100,11 @@ typedef struct{
 typedef struct{
 	volatile uint32_t EVCR;			 /*!< Event control register */
 	volatile uint32_t MAPR;			 /*!< AF remap and debug I/O configuration register */
-	volatile uint32_t EXTICR1;		 /*!< External interrupt configuration register 1 */
-	volatile uint32_t EXTICR2;		 /*!< External interrupt configuration register 2 */
-	volatile uint32_t EXTICR3;		 /*!< External interrupt configuration register 3 */
-	volatile uint32_t EXTICR4;		 /*!< External interrupt configuration register 4 */
-	volatile uint32_t MAPR2;		 /*!< AF remap and debug I/O configuration register2 */
+	volatile uint32_t EXTICR[4];		 /*!< External interrupt configuration register 1 */
+	//volatile uint32_t EXTICR2;		 /*!< External interrupt configuration register 2 */
+	//volatile uint32_t EXTICR3;		 /*!< External interrupt configuration register 3 */
+	//volatile uint32_t EXTICR4;		 /*!< External interrupt configuration register 4 */
+	//volatile uint32_t MAPR2;		 /*!< AF remap and debug I/O configuration register2 */
 }AFIO_RegDef_t;
 
 //************************************************ peripheral definitions *******************************************************
@@ -131,6 +144,20 @@ typedef struct{
 #define GPIOB_REG_RESET()	do{(RCC -> APB2RSTR |= (1<<3)); (RCC -> APB2RSTR &=~ (1<<3));}while(0)
 #define GPIOC_REG_RESET()	do{(RCC -> APB2RSTR |= (1<<4)); (RCC -> APB2RSTR &=~ (1<<4));}while(0)
 #define GPIOD_REG_RESET()	do{(RCC -> APB2RSTR |= (1<<5)); (RCC -> APB2RSTR &=~ (1<<5));}while(0)
+
+//******************************************* RETURN PORT CODE **********************************************
+
+#define GPIO_BASEADDR_TO_CODE(x)		((x == GPIOA) ? 0 : (x == GPIOB)? 1 : (x == GPIOC) ? 3 : (x == GPIOD) ? 4 :0)
+
+//******************************************** IRQ NUMBERS **************************************************
+
+#define IRQ_NO_EXTI0		6
+#define IRQ_NO_EXTI1		7
+#define IRQ_NO_EXTI2		8
+#define IRQ_NO_EXTI3		9
+#define IRQ_NO_EXTI4		10
+#define IRQ_NO_EXTI5_9		23
+#define IRQ_NO_EXTI10_15	40
 
 //****************************************** other macro ****************************************************
 #define ENABLE 				 1
