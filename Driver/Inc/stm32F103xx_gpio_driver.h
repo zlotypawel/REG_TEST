@@ -22,10 +22,11 @@ typedef struct{
 
 
 typedef struct{
-	GPIO_RegDef_t *pGPIOx;
-	GPIO_PinConfig_t GPIO_PinConfig;
-	AFIO_RegDef_t *pAFIFO;
-	EXTI_RegDef_t *pEXTICR;
+	EXTI_RegDef_t		*pEXTI;
+	GPIO_RegDef_t		*pGPIOx;
+	GPIO_PinConfig_t	 GPIO_PinConfig;
+	AFIO_RegDef_t 		*pAFIFO;
+
 
 }GPIO_Handle_t;
 

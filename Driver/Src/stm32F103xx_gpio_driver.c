@@ -73,15 +73,15 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 			pGPIOHandle ->pGPIOx->CRL |=   (8 << (4 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
 			pGPIOHandle ->pGPIOx->ODR |=   (1 << (pGPIOHandle -> GPIO_PinConfig.GPIO_PinNumber));
 
-			EXTI -> FTSR |= (1<< pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber);
-			EXTI -> RTSR &= ~(1<< pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber);
+			pGPIOHandle -> pEXTI -> FTSR |= (1<< (pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber));
+			pGPIOHandle -> pEXTI -> RTSR &= ~(1<< (pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber));
 
-			EXTI->IMR |= (1<< pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber);
+			pGPIOHandle -> pEXTI ->IMR |= (1<< pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber);
 
 			uint8_t tmp1 = pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber / 4;
 			uint8_t tmp2 = pGPIOHandle ->GPIO_PinConfig.GPIO_PinNumber % 4;
 			uint8_t portcode = GPIO_BASEADDR_TO_CODE(pGPIOHandle ->pGPIOx);
-			AFIO ->EXTICR[tmp1] |= portcode << (tmp2 * 4);
+			pGPIOHandle -> pAFIFO ->EXTICR[tmp1] |= portcode << (tmp2 * 4);
 
 
 

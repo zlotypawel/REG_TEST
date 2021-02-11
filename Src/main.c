@@ -19,17 +19,19 @@ int main(void) {
 	GpioLed.GPIO_PinConfig.GPIO_PinSpeed = GPIO_MAX_SPEED_2Mhz;
 
 	GpioSW.pGPIOx = GPIOB;
+	GpioSW.pEXTI = EXTI;
+	GpioSW.pAFIFO = AFIO;
 	GpioSW.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_1;
 	GpioSW.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_FT;
 
 
-	GPIO_IRQConfig(IRQ_NO_EXTI1, ENABLE);
+
 
 	GPIO_Init(&GpioLed);
 	GPIO_Init(&GpioSW);
 
 
-
+	GPIO_IRQConfig(IRQ_NO_EXTI1, ENABLE);
 
 
 	while (1) {
